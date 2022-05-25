@@ -14,7 +14,8 @@ private:
 	char CargoType;                              ///normal-special-vip
 	char CargoStatus;                           ///waiting-moving-delivered
 	Truck* truckptr;
-	int waitingDays;                           ///for autoP
+	int waitingDays;   ///for autoP
+	int Priority;
 public:
 	Cargo(int cargoid, int readyTime, int loadtime, int deliveryDistance, int cargoCost, char cargoType, Truck* truckPtr= nullptr);
 	void SetCargoID(int Id);
@@ -46,6 +47,8 @@ public:
 
 	void incrementWaitingDays();
 
+	void SetCargoPriority(Cargo* cargo);
+	int GetCargoPriority();
 
 	Cargo* getDataWithID(int cargoid);  //Used for the promotion event to retrieve normal cargo's data which to be promoted
 

@@ -663,7 +663,7 @@ void Company::checkWaiting_Special()
 
 void Company::checkWaiting_Normal()
 {
-	Cargo* tempCargo;
+	Cargo* tempCargo = NULL;
 	int cDay;
 	List<Cargo> tempL;
 	while (!normalCargos.isEmpty())
@@ -704,7 +704,7 @@ void Company::checkWaiting_Normal()
 				}
 			}
 	}
-	while (normalCargos.getEntry(1) != nullptr)
+	while (normalCargos.getEntry(1) != nullptr && tempCargo!=NULL)
 	{
 		normalCargos.remove(1);
 		cDay = tempCargo->GetReadyTime();
@@ -763,16 +763,57 @@ void Company::moveToDelivered()
 
 void Company::moveTruck(Cargo* cargo)
 {
-	/////////////////
-	//   PHASE 2   //
-	/////////////////
+	Truck* tempTruck = cargo->GetTruck();
+	if (tempTruck->getCargoCount(day,hour) == -1)
+	{
+		if (tempTruck->getTruckType() == 'V')
+			TrucksInCheckUp[0].enqueue(tempTruck);
+		else if (tempTruck->getTruckType() == 'S')
+			TrucksInCheckUp[1].enqueue(tempTruck);
+		else
+			TrucksInCheckUp[2].enqueue(tempTruck);
+	}
+	else
+	{
+		if (tempTruck->getTruckType() == 'V')
+			AvailableTrucks[0].enqueue(tempTruck, tempTruck->getSpeed());
+		else if (tempTruck->getTruckType() == 'S')
+			AvailableTrucks[1].enqueue(tempTruck, tempTruck->getSpeed());
+		else
+			AvailableTrucks[2].enqueue(tempTruck, tempTruck->getSpeed());
+	}
+
+	cargo->SetTruck(NULL);
 }
 
 void Company::moveToAvailableTrucks()
 {
-	/////////////////
-	//   PHASE 2   //
-	/////////////////
+	Node<Truck>* tempNode;
+	Truck* tempTruck;
+	for (int i = 0; i < 6; i++)
+	{
+		if (i < 3)
+		{
+			while (!TrucksInCheckUp[i].isEmpty())
+			{
+				tempNode = NULL;
+				TrucksInCheckUp[i].peek(tempNode);
+				if (tempNode)
+				{
+					tempTruck = tempNode->getData();
+				}
+				else break;
+				if (tempNode && tempTruck->moveToAvailable(day, hour))
+				{
+					if (i >= 3)
+						tempTruck->resetInMaintenance();
+						AvailableTrucks[i].enqueue(tempTruck, tempTruck->getSpeed());
+						TrucksInCheckUp[i].dequeue(tempNode);
+				}
+				else break;
+			}
+		}
+	}
 }
 
 int Company::getDay()
@@ -811,7 +852,29 @@ void Company::autoPromote()
 
 void Company::checkInMaintenance()
 {
-	/////////////////
-	//   PHASE 2   //
-	/////////////////
+	/*Generating random number for maintenance*/
+	int i = rand() % 101;
+	if (i >= 15 && i <= 35)
+	{
+		/*Probability for the type of rover entering the maintenance*/
+		int j = rand() % 3;
+		Node<Truck>* tempNode = NULL;
+		Truck* tempTruck;
+		AvailableTrucks[j].dequeue(tempNode);
+		/*Checking if the randomized type is available in the available rovers*/
+		if (tempNode)
+		{
+			tempTruck = tempNode->getData();
+			/*If the rover just got out of check up*/
+			if (tempTruck->getJNumForCheck() != 0)
+			{
+				tempTruck->setInMaintenance();
+				tempTruck->setCheckUpEnter(day);
+				/* (j+3) are the rovers of the same type*/
+				AvailableTrucks[j + 3].enqueue(tempTruck, (day + tempTruck->getCheckupDuration()));
+			}
+			else
+				AvailableTrucks[j].enqueue(tempTruck, -tempTruck->getSpeed());
+		}
+	}
 }

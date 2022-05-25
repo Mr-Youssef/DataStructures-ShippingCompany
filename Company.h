@@ -40,9 +40,13 @@ private:
 	PriorityQ<Cargo> movingCargos;
 	Queue<Cargo> deliveredCargos;
 	PriorityQ<Truck> AvailableTrucks[6];
+	Queue<Truck> VIPtrucks;
+	Queue<Truck> SpecialTrucks;
+	Queue<Truck> NormalTrucks;
 	Queue<Truck> TrucksInCheckUp[3];
 	Queue<Event> EventList;
 
+	int availableTrucks = 0;
 	int StatisticsArr[7];
 	int noOfCargos;
 	int noOfCancelled;
@@ -52,6 +56,7 @@ private:
 	int autoPromoted;
 	int day;
 	int hour;
+	int maxWaitT = 0;
 
 	UI* UIptr;	 // pointer to user interface
 public:
@@ -109,4 +114,6 @@ public:
 
 	/*Function that checks if the truck is in maintenance*/
 	void checkInMaintenance();
+	//void AssignCargo(Cargo* C);
+	//void maxWait();
 };

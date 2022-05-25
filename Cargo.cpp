@@ -52,6 +52,13 @@ int Cargo::getWaitingDays() { return waitingDays; }
 
 void Cargo::incrementWaitingDays() { waitingDays++; }
 
+void Cargo::SetCargoPriority(Cargo* cargo) {
+	Priority = cargo->GetCargoCost() / (cargo->GetDeliveryDistance() * (cargo->GetReadyTime()));
+}
+int Cargo::GetCargoPriority() {
+	return Priority;
+}
+
 bool Cargo::operator==(const Cargo &over) const
 {
 	if (cargoID == over.cargoID)

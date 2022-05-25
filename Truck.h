@@ -8,6 +8,7 @@ private:
 	char truckType;
 	int truckCapacity;
 	int checkupDuration;
+	int checkupEnter;
 	int speed;
 	int deliveryInterval;
 	int assignedCargoCount;  //No. of cargos assigned in the truck and still are being delivered 
@@ -25,6 +26,7 @@ public:
 	void setTruckCapacity(int);
 	int getTruckCapacity();
 
+	void setCheckUpEnter(int d);
 	void setCheckupDuration(int);
 	int getCheckupDuration();
 
@@ -34,8 +36,14 @@ public:
 	void setDeliveryInterval(int);
 	int getDeliveryInterval();
 
+	void setInMaintenance();
+	void resetInMaintenance();
+	bool getInMain();
+
+	bool moveToAvailable(int day, int hour);
+
 	void incrementCargoCount();
-	int getCargoCount();
+	int getCargoCount(int day, int hour);
 
 	void setJNumForCheck(int);
 	int getJNumForCheck();

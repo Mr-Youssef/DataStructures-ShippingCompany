@@ -54,11 +54,11 @@ public:
 	}
 
 	//Function the checks the first element.
-	bool peek(Node<T>*& frntEntry) const
+	bool peek(Node<T>*& frntEntry) /*const*/
 	{
 		if (isEmpty())
 			return false;
-		frntEntry = front->getData();
+		frntEntry = front;/*->getData();*/
 		return true;
 	}
 

@@ -40,10 +40,10 @@ public:
 	void resetInMaintenance();
 	bool getInMain();
 
-	bool moveToAvailable(int day, int hour);
+	bool moveToAvailable(int hour);
 
 	void incrementCargoCount();
-	int getCargoCount(int day, int hour);
+	int getCargoCount();
 
 	void setJNumForCheck(int);
 	int getJNumForCheck();

@@ -2,10 +2,11 @@
 #include <iostream>
 using namespace std;
 
-Cargo::Cargo(int cargoid, int readyTime, int loadtime, int deliveryDistance, int cargoCost, char cargoType, Truck* truckPtr)
+Cargo::Cargo(int cargoid, int readyDay, int readyHour, int loadtime, int deliveryDistance, int cargoCost, char cargoType, Truck* truckPtr)
 {
 	SetCargoID(cargoid);
-	SetReadyTime(readyTime);
+	SetReadyDay(readyDay);
+	SetReadyHour(readyHour);
 	SetloadTime(loadtime);
 	SetDeliveryDistance(deliveryDistance);
 	SetCargoCost(cargoCost);
@@ -16,7 +17,9 @@ Cargo::Cargo(int cargoid, int readyTime, int loadtime, int deliveryDistance, int
 
 void Cargo::SetCargoID(int Id) { cargoID = Id; }
 
-void Cargo::SetReadyTime(int R) { ReadyTime = R; }
+void Cargo::SetReadyDay(int R) { ReadyDay = R; }
+
+void Cargo::SetReadyHour(int R) { ReadyHour = R; }
 
 void Cargo::SetloadTime(int U) { loadTime = U; }
 
@@ -36,7 +39,9 @@ int Cargo::GetCargoID() { return cargoID; }
 
 char Cargo::GetCargoType() { return CargoType; }
 
-int Cargo::GetReadyTime() { return ReadyTime; }
+int Cargo::GetReadyDay() { return ReadyDay; }
+
+int Cargo::GetReadyHour() { return ReadyHour; }
 
 int Cargo::GetloadTime() { return loadTime; }
 
@@ -53,7 +58,7 @@ int Cargo::getWaitingDays() { return waitingDays; }
 void Cargo::incrementWaitingDays() { waitingDays++; }
 
 void Cargo::SetCargoPriority(Cargo* cargo) {
-	Priority = cargo->GetCargoCost() / (cargo->GetDeliveryDistance() * (cargo->GetReadyTime()));
+	Priority = cargo->GetCargoCost() / (cargo->GetDeliveryDistance() * (cargo->GetReadyDay()+ cargo->GetReadyHour()));
 }
 int Cargo::GetCargoPriority() {
 	return Priority;
@@ -74,7 +79,8 @@ bool Cargo::operator==(const Cargo &over) const
 const Cargo& Cargo::operator=(const Cargo& copy)
 {
 	cargoID = copy.cargoID;
-	ReadyTime = copy.ReadyTime;
+	ReadyDay = copy.ReadyDay;
+	ReadyHour = copy.ReadyHour;
 	loadTime = copy.loadTime;
 	DeliveryDistance = copy.DeliveryDistance;
 	CargoCost = copy.CargoCost;

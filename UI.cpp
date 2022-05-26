@@ -126,7 +126,7 @@ bool UI::Fill_Events(ifstream& fin, Queue<Event>& Event_List, int& NoOFcargos, i
 				return false;
 			}
 
-			Preparation* prepare = new Preparation(id, ED, EH, CType, 0, LT, dist, cost);
+			Preparation* prepare = new Preparation(id, ED, EH, CType, ED, EH, LT, dist, cost);
 			NoOFcargos++;
 			Event_List.enqueue(prepare);
 		}
@@ -144,7 +144,7 @@ bool UI::Fill_Events(ifstream& fin, Queue<Event>& Event_List, int& NoOFcargos, i
 			fin >> ED;
 			fin.ignore(1, '\n');
 			fin >> EH >> id >> extraMoney;
-			Promotion* promote = new Promotion(id, ED, EH, 'N', 0, LT, dist, cost, extraMoney);
+			Promotion* promote = new Promotion(id, ED, EH, 'N', ED, EH, LT, dist, cost, extraMoney);
 			Event_List.enqueue(promote);
 		}
 	}

@@ -18,44 +18,42 @@ Company::Company()
 	}
 }
 
-/////////////////
-	//   PHASE 2   //
-	/////////////////
-//==============For Bonus 3 ArrOfSpeed will be parameters instead of NS, SS, VS=============// 
-//void Company::setAvailableTrucks(int N, int S, int V, int NS, int SS, int VS, int NTC, int STC, int VTC, int J, int CN, int CS, int CV)
-//{
-//	/*Saving the number of each truck for each type*/
-//	StatisticsArr[3] = N;
-//	StatisticsArr[4] = S;
-//	StatisticsArr[5] = V;
-//	int id = 1;
-//
-//	/*Looping on each truck type and assign them to the available truck list*/
-//	for (int i = 0; i < N; i++)
-//	{
-//
-//		Truck* normal = new Truck('N', NS, NTC, J, CN);
-//		normal->setTruckID(id);
-//		id++;
-//		AvailableTrucks[0].enqueue(normal, NS);
-//	}
-//
-//	for (int i = 0; i < S; i++)
-//	{
-//		Truck* special = new Truck('S', SS, STC, J, CS);
-//		special->setTruckID(id);
-//		id++;
-//		AvailableTrucks[1].enqueue(special, SS);
-//	}
-//
-//	for (int i = 0; i < V; i++)
-//	{
-//		Truck* vip = new Truck('V', VS, VTC, J, CV);
-//		vip->setTruckID(id);
-//		id++;
-//		AvailableTrucks[0].enqueue(vip, VS);
-//	}
-//}
+
+//==============For Bonus 3 ArrOfSpeed will be parameters instead of NS, SS, VS=============//
+void Company::setAvailableTrucks(int N, int S, int V, int NS, int SS, int VS, int NTC, int STC, int VTC, int J, int CN, int CS, int CV)
+{
+	/*Saving the number of each truck for each type*/
+	StatisticsArr[3] = N;
+	StatisticsArr[4] = S;
+	StatisticsArr[5] = V;
+	int id = 1;
+
+	/*Looping on each truck type and assign them to the available truck list*/
+	for (int i = 0; i < N; i++)
+	{
+
+		Truck* normal = new Truck('N', NS, NTC, J, CN);
+		normal->setTruckID(id);
+		id++;
+		AvailableTrucks[0].enqueue(normal, NS);
+	}
+
+	for (int i = 0; i < S; i++)
+	{
+		Truck* special = new Truck('S', SS, STC, J, CS);
+		special->setTruckID(id);
+		id++;
+		AvailableTrucks[1].enqueue(special, SS);
+	}
+
+	for (int i = 0; i < V; i++)
+	{
+		Truck* vip = new Truck('V', VS, VTC, J, CV);
+		vip->setTruckID(id);
+		id++;
+		AvailableTrucks[0].enqueue(vip, VS);
+	}
+}
 
 bool Company::Load()
 {
@@ -337,9 +335,9 @@ string Company::string_Delivered(Queue<Cargo> x)
 
 void Company::checkAndAssignCargo()
 {
-	/////////////////
-	//   PHASE 2   //
-	/////////////////
+	checkWaiting_VIP();
+	checkWaiting_Special();
+	checkWaiting_Normal();
 }
 
 bool Company::assignTruck_Normal(PriorityQ<Truck>* truckArray, Cargo*& tempCargo)
@@ -360,8 +358,8 @@ bool Company::assignTruck_Normal(PriorityQ<Truck>* truckArray, Cargo*& tempCargo
 		for (int i = 0; i < tempNode->getData()->getTruckCapacity(); i++)
 		{ 
 			/*Remove the waiting normal cargo and assign it to the normal truck*/
-			tempCargo = normalCargos.getEntry(1);
-			normalCargos.remove(1);
+			/*tempCargo = normalCargos.getEntry(1);
+			normalCargos.remove(1);*/
 			tempCargo->SetTruck(tempNode->getData());
 			tempNode->getData()->incrementCargoCount();
 		}
@@ -381,8 +379,8 @@ bool Company::assignTruck_Normal(PriorityQ<Truck>* truckArray, Cargo*& tempCargo
 		for (int i = 0; i < tempNode->getData()->getTruckCapacity(); i++)
 		{
 			/*Remove the waiting normal cargo and assign it to the vip truck*/
-			tempCargo = normalCargos.getEntry(1);
-			normalCargos.remove(1);
+			/*tempCargo = normalCargos.getEntry(1);
+			normalCargos.remove(1);*/
 			tempCargo->SetTruck(tempNode->getData());
 			tempNode->getData()->incrementCargoCount();
 		}
@@ -420,8 +418,8 @@ bool Company::assignTruck_VIP(PriorityQ<Truck>* truckArray, Cargo*& tempCargo)
 		{
 			/*Remove the waiting vip cargo and assign it to the vip truck*/
 
-			vipCargos.dequeue(tempNodeC);
-			tempCargo = tempNodeC->getData();
+			/*vipCargos.dequeue(tempNodeC);
+			tempCargo = tempNodeC->getData();*/
 			tempCargo->SetTruck(tempNode->getData());
 			tempNode->getData()->incrementCargoCount();
 		}
@@ -443,8 +441,8 @@ bool Company::assignTruck_VIP(PriorityQ<Truck>* truckArray, Cargo*& tempCargo)
 		{
 			/*Remove the waiting vip cargo and assign it to the normal truck*/
 
-			vipCargos.dequeue(tempNodeC);
-			tempCargo = tempNodeC->getData();
+			/*vipCargos.dequeue(tempNodeC);
+			tempCargo = tempNodeC->getData();*/
 			tempCargo->SetTruck(tempNode->getData());
 			tempNode->getData()->incrementCargoCount();
 		}
@@ -465,8 +463,8 @@ bool Company::assignTruck_VIP(PriorityQ<Truck>* truckArray, Cargo*& tempCargo)
 		for (int i = 0; i < tempNode->getData()->getTruckCapacity(); i++)
 		{
 			/*Remove the waiting vip cargo and assign it to the special truck*/
-			vipCargos.dequeue(tempNodeC);
-			tempCargo = tempNodeC->getData();
+			/*vipCargos.dequeue(tempNodeC);
+			tempCargo = tempNodeC->getData();*/
 			tempCargo->SetTruck(tempNode->getData());
 			tempNode->getData()->incrementCargoCount();
 		}
@@ -505,8 +503,8 @@ bool Company::assignTruck_Special(PriorityQ<Truck>* truckArray, Cargo*& tempCarg
 		for (int i = 0; i < tempNode->getData()->getTruckCapacity(); i++)
 		{
 			/*Remove the waiting special cargo and assign it to the special truck*/
-			specialCargos.dequeue(tempNodeC);
-			tempCargo = tempNodeC->getData();
+			/*specialCargos.dequeue(tempNodeC);
+			tempCargo = tempNodeC->getData();*/
 			tempCargo->SetTruck(tempNode->getData());
 			tempNode->getData()->incrementCargoCount();
 		}
@@ -530,17 +528,18 @@ void Company::checkWaiting_VIP()
 {
 	Node<Cargo>* tempNode;
 	Cargo* tempCargo;
-	int cDay;
+	int cDay,cHour;
 	PriorityQ<Cargo> tempPriQ;
 	/*Checking if the waiting vip Cargos list is not empty*/
 	if (!vipCargos.isEmpty())
 	{
 		vipCargos.dequeue(tempNode);
 		tempCargo = tempNode->getData();
-		cDay = tempCargo->GetReadyTime();
+		cDay = tempCargo->GetReadyDay();
+		cHour = tempCargo->GetReadyHour();
 		/*Checking if the day of the preparation is smaller than or equal the current day*/
 		/*Condition was not met, enqueue the dequeued Node to a temporary Priqueue*/
-		if (cDay > day)
+		if (cDay > day || cHour > hour )
 		{
 			tempPriQ.enqueue(tempCargo, tempNode->getPriority());
 
@@ -549,7 +548,7 @@ void Company::checkWaiting_VIP()
 		{
 			/* While the Condition is met, Assign a truck to the dequeued cargo*/
 
-			while (cDay <= day)
+			while (cDay <= day && cHour <= hour)
 			{
 				bool test = assignTruck_VIP(AvailableTrucks, tempCargo);
 				/*Checking if there is available truck to be assigned to the waiting cargos*/
@@ -558,7 +557,8 @@ void Company::checkWaiting_VIP()
 					tempPriQ.enqueue(tempCargo, tempNode->getPriority());
 					bool can = vipCargos.dequeue(tempNode);
 					tempCargo = tempNode->getData();
-					cDay = tempCargo->GetReadyTime();
+					cDay = tempCargo->GetReadyDay();
+					cHour = tempCargo->GetReadyHour();
 					if (!can)
 					{
 						tempNode = NULL;
@@ -581,8 +581,9 @@ void Company::checkWaiting_VIP()
 		while (vipCargos.dequeue(tempNode))
 		{
 			tempCargo = tempNode->getData();
-			cDay = tempCargo->GetReadyTime();
-			if (cDay <= day)
+			cDay = tempCargo->GetReadyDay();
+			cHour = tempCargo->GetReadyHour();
+			if (cDay <= day && cHour <= hour)
 				tempCargo->incrementWaitingDays();
 			tempPriQ.enqueue(tempCargo, tempNode->getPriority());
 		}
@@ -599,24 +600,25 @@ void Company::checkWaiting_Special()
 {
 	Node<Cargo>* tempNode;
 	Cargo* tempCargo;
-	int cDay;
+	int cDay, cHour;
 	Queue<Cargo> tempQ;
 	/*Checking if the waiting special cargos list is not empty*/
 	if (!specialCargos.isEmpty())
 	{
 		specialCargos.dequeue(tempNode);
 		tempCargo = tempNode->getData();
-		cDay = tempCargo->GetReadyTime();
+		cDay = tempCargo->GetReadyDay();
+		cHour = tempCargo->GetReadyHour();
 		/*Checking if the day of the preparation is smaller than or equal the current day*/
 		/*Condition was not met, enqueue the dequeued Node to a temporary queue*/
-		if (cDay > day)
+		if (cDay > day || cHour > hour)
 		{
 			tempQ.enqueue(tempCargo);
 		}
 		else
 		{
 			/* While Condition is met, Assign a truck to the dequeued cargo*/
-			while (cDay <= day)
+			while (cDay <= day && cHour <= hour)
 			{
 				bool test = assignTruck_Special(AvailableTrucks, tempCargo);
 				/*Checking if there is available truck to be assigned to the waiting cargos*/
@@ -625,7 +627,8 @@ void Company::checkWaiting_Special()
 					tempQ.enqueue(tempCargo);
 					bool can = specialCargos.dequeue(tempNode);
 					tempCargo = tempNode->getData();
-					cDay = tempCargo->GetReadyTime();
+					cDay = tempCargo->GetReadyDay();
+					cHour = tempCargo->GetReadyHour();
 					if (!can)
 					{
 						tempNode = NULL;
@@ -649,8 +652,9 @@ void Company::checkWaiting_Special()
 	while (specialCargos.dequeue(tempNode))
 	{
 		tempCargo = tempNode->getData();
-		cDay = tempCargo->GetReadyTime();
-		if (cDay <= day)
+		cDay = tempCargo->GetReadyDay();
+		cHour = tempCargo->GetReadyHour();
+		if (cDay <= day && cHour <= hour)
 			tempCargo->incrementWaitingDays();
 		tempQ.enqueue(tempCargo);
 	}
@@ -664,22 +668,23 @@ void Company::checkWaiting_Special()
 void Company::checkWaiting_Normal()
 {
 	Cargo* tempCargo = NULL;
-	int cDay;
+	int cDay, cHour;
 	List<Cargo> tempL;
 	while (!normalCargos.isEmpty())
 	{
 		tempCargo = normalCargos.getEntry(1);
 		normalCargos.remove(1);
-			cDay = tempCargo->GetReadyTime();
+		cDay = tempCargo->GetReadyDay();
+		cHour = tempCargo->GetReadyHour();
 			/*Checking if the day of the preparation is smaller than or equal the current day*/
-			if (cDay > day)
+			if (cDay > day || cHour > hour)
 			{
 				tempL.InsertEnd(tempCargo);
 				break;
 			}
 			else
 			{
-				while (cDay <= day)
+				while (cDay <= day && cHour <= hour)
 				{
 					bool test = assignTruck_Normal(AvailableTrucks, tempCargo);
 					/*Checking if there is available truck to be assigned to the waiting cargos*/
@@ -688,9 +693,8 @@ void Company::checkWaiting_Normal()
 						tempL.InsertEnd(tempCargo);
 						tempCargo = normalCargos.getEntry(1);
 						normalCargos.remove(1);
-						cDay = tempCargo->GetReadyTime();
-
-
+						cDay = tempCargo->GetReadyDay();
+						cHour = tempCargo->GetReadyHour();
 					}
 					else
 						/*If there is no suitable truck to assign then increment the waiting days*/
@@ -707,8 +711,9 @@ void Company::checkWaiting_Normal()
 	while (normalCargos.getEntry(1) != nullptr && tempCargo!=NULL)
 	{
 		normalCargos.remove(1);
-		cDay = tempCargo->GetReadyTime();
-		if (cDay <= day)
+		cDay = tempCargo->GetReadyDay();
+		cHour = tempCargo->GetReadyHour();
+		if (cDay <= day && cHour <= hour)
 			tempCargo->incrementWaitingDays();
 		tempL.InsertEnd(tempCargo);
 	}
@@ -764,7 +769,7 @@ void Company::moveToDelivered()
 void Company::moveTruck(Cargo* cargo)
 {
 	Truck* tempTruck = cargo->GetTruck();
-	if (tempTruck->getCargoCount(day,hour) == -1)
+	if (tempTruck->getCargoCount() == -1)
 	{
 		if (tempTruck->getTruckType() == 'V')
 			TrucksInCheckUp[0].enqueue(tempTruck);
@@ -803,7 +808,7 @@ void Company::moveToAvailableTrucks()
 					tempTruck = tempNode->getData();
 				}
 				else break;
-				if (tempNode && tempTruck->moveToAvailable(day, hour))
+				if (tempNode && tempTruck->moveToAvailable(hour))
 				{
 					if (i >= 3)
 						tempTruck->resetInMaintenance();

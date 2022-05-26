@@ -7,7 +7,8 @@ class Cargo
 {
 private:
 	int cargoID;
-	int ReadyTime;
+	int ReadyDay;
+	int ReadyHour;
 	int loadTime;
 	int DeliveryDistance;
 	int CargoCost;
@@ -17,12 +18,15 @@ private:
 	int waitingDays;   ///for autoP
 	int Priority;
 public:
-	Cargo(int cargoid, int readyTime, int loadtime, int deliveryDistance, int cargoCost, char cargoType, Truck* truckPtr= nullptr);
+	Cargo(int cargoid, int readyDay, int readyHour, int loadtime, int deliveryDistance, int cargoCost, char cargoType, Truck* truckPtr= nullptr);
 	void SetCargoID(int Id);
 	int GetCargoID();
 	
-	void SetReadyTime(int R);
-	int GetReadyTime();
+	void SetReadyDay(int R);
+	int GetReadyDay();
+
+	void SetReadyHour(int R);
+	int GetReadyHour();
 
 	void SetloadTime(int U);
 	int GetloadTime();

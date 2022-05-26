@@ -87,9 +87,9 @@ bool Truck::getInMain()
 	return inMaintenance;
 }
 
-bool Truck::moveToAvailable(int day, int hour)
+bool Truck::moveToAvailable(int hour)
 {
-	return ((24 * day + hour)- checkupEnter == checkupDuration);
+	return (hour- checkupEnter == checkupDuration);
 }
 
 void Truck::setDeliveryInterval(int DI)
@@ -104,7 +104,7 @@ void Truck::incrementCargoCount()
 {
 	assignedCargoCount++;
 }
-int Truck::getCargoCount(int day, int hour)
+int Truck::getCargoCount()
 {
 	return assignedCargoCount;
 }

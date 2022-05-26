@@ -90,6 +90,24 @@ const Cargo& Cargo::operator=(const Cargo& copy)
 	return *this;
 }
 
+int Cargo::getED()
+{
+	return ExecutionDays;
+}
+void Cargo::setED(int ED)
+{
+	ExecutionDays = ED;
+}
+
+int Cargo::getDD()
+{
+	return deliverDay;
+}
+
+void Cargo::setDD(int CD)
+{
+	deliverDay = CD;
+}
 //Cargo* getDataWithID(int cargoid)
 //{
 //	return;

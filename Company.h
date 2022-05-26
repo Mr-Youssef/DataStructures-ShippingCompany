@@ -68,6 +68,9 @@ public:
 	/*Loads the file to get input, and check is simulation is possible*/ 
 	bool Load();		
 
+	/*Save an external output file*/
+	void SaveFile();
+
 	/*The main function that runs the code*/
 	void Simulator();
 
@@ -119,6 +122,8 @@ public:
 
 	/*Function that checks if the truck is in maintenance*/
 	void checkInMaintenance();
+
+	int getAvgUtilization();
 	//void AssignCargo(Cargo* C);
 	//void maxWait();
 };

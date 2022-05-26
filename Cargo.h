@@ -17,6 +17,8 @@ private:
 	Truck* truckptr;
 	int waitingDays;   ///for autoP
 	int Priority;
+	int ExecutionDays;
+	int deliverDay;
 public:
 	Cargo(int cargoid, int readyDay, int readyHour, int loadtime, int deliveryDistance, int cargoCost, char cargoType, Truck* truckPtr= nullptr);
 	void SetCargoID(int Id);
@@ -53,6 +55,12 @@ public:
 
 	void SetCargoPriority(Cargo* cargo);
 	int GetCargoPriority();
+
+	void setED(int ED);
+	int getED();
+
+	void setDD(int CD);
+	int getDD();
 
 	Cargo* getDataWithID(int cargoid);  //Used for the promotion event to retrieve normal cargo's data which to be promoted
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <Windows.h>
 #include <iostream>
 #include <fstream>
 #include "LinkedList.h"
@@ -53,7 +54,7 @@ public:
 	int getNoOfEvent() const;
 	void setAutoP(int);
 	void Print(string, string, string, string, string, string, string);
-	//void SaveFile(string, string, string, string, float, float, int);
+	void SaveFile(string , string , string , string , string , string, string, string );
 	int getMode();
 	void Error();
 };

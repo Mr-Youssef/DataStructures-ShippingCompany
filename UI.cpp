@@ -197,25 +197,23 @@ void UI::Print(string line1, string line2, string line3, string line4, string li
 		cout << line1 << endl << line2 << endl << line3 << endl << line4 << endl << line5 << endl << line6 << endl << line7 << endl << endl;
 
 	}
-	/*else if (mode == 2) {
-		cout << line1 << endl << line2 << x << line3 << x << line4 << x << line5 << x << line6 << endl << endl;
+	else if (mode == 2) {
+		cout << line1 << endl << line2 << endl << line3 << endl << line4 << endl << line5 << endl << line6 << endl << line7 << endl << endl;
 		Sleep(1000);
-	}*/
+	}
 }
 //=============PHASE 2
-//void UI::SaveFile(string line1, string line2, string line3, string line4, float wait, float exec, int AutoP)
-//{
-//	if (mode == 3)
-//	{
-//		cout << "Silent Mode \nSimulation Starts...\n";
-//		cout << "Simulation ends, Output file created\n\n";
-//	}
-//
-//	ofstream saved_file;
-//	saved_file.open("saved_file.txt", ios::out | ios::trunc);
-//	saved_file << line1 << endl << line2 << endl << line3 << endl << line4 << endl;
-//	saved_file << "Avg. Wait = " << setprecision(4) << wait << ", Avg. Exec = " << setprecision(4) << exec;
-//	saved_file << endl << "Auto-promoted = " << AutoP;
-//	saved_file.close();
-//}
+void UI::SaveFile(string line1, string line2, string line3, string line4, string line5, string line6, string line7, string line8)
+{
+	if (mode == 3)
+	{
+		cout << "Silent Mode \nSimulation Starts...\n";
+		cout << "Simulation ends, Output file created\n\n";
+	}
+
+	ofstream saved_file;
+	saved_file.open("saved_file.txt", ios::out | ios::trunc);
+	saved_file << line1 << endl << line2 << endl << line3 << endl << line4 << endl << line5 << endl << line6 << endl << line7 << endl << line8 << endl;
+	saved_file.close();
+}
 

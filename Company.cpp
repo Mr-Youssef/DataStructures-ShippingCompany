@@ -67,6 +67,35 @@ bool Company::Load()
 	return Valid;
 }
 
+void Company::SaveFile()
+{
+	string line1 = "CDT\ID\PT\WT\TID";
+	Queue<int> Temp;
+	Cargo* x;
+	Node<Cargo>* TempCargo;
+	string line2 = "";
+	/*Looping on the completed mission list to print their info*/
+	while (!deliveredCargos.isEmpty())
+	{
+		deliveredCargos.dequeue(TempCargo);
+		x = TempCargo->getData();
+		int CDT = x->GetDeliveryDistance() / x->GetTruck()->getSpeed() + x->GetloadTime();
+		line2 += to_string(CDT) + "\t" + to_string(x->GetCargoID())
+			+ "\t" + to_string(x->GetReadyDay()) + ":" + to_string(x->GetReadyHour()) + "\t" + to_string(x->getWaitingDays())
+			+ "\t" + to_string(x->GetTruck()->getTruckID()) + "\n";
+	}
+	
+	string line3= "Cargos: " + to_string(StatisticsArr[0] + StatisticsArr[1] + StatisticsArr[2]) + " [N: " + to_string(StatisticsArr[0]) + ", S: " + to_string(StatisticsArr[1]) + ", V: " + to_string(StatisticsArr[2]) + "]\n";
+	string line6 = "Trucks: "+  to_string(StatisticsArr[3] + StatisticsArr[4] + StatisticsArr[5]) + " [N: " + to_string(StatisticsArr[3]) + ", S: " + to_string(StatisticsArr[4]) + ", V: " + to_string(StatisticsArr[5]) + "]\n";
+	string line4=  "Cargo Avg Wait = " + to_string(getAvgWaitingDays());
+	string line5= "Auto-promoted Cargos: " + to_string(getAutoPromotedPercent()) + "%";
+	string line7 = "Avg Active Time = " + to_string(getAvgActiveDays()) + "%";
+	string line8 = "Avg Utilization= " + to_string(getAvgUtilization());
+
+	//Calling UI Save Function
+	UIptr->SaveFile(line1, line2, line3, line4, line5, line6, line7, line8);
+}
+
 void Company::Simulator()
 {
 	bool isPossible = Load();
@@ -825,32 +854,59 @@ void Company::moveToDelivered()
 	//In phase 1 we will move the waiting cargo to delivered cargo list directly==================
 	//In phase 2 this will change, (waiting->loading->moving->delivered)==========================
 	//Cargo tempnormalCargo();
-	Node<Cargo>* tempspecialNode;
+	/*Node<Cargo>* tempspecialNode;
 	Cargo* tempSpecialCargo;
 	Node<Cargo>* tempVIPNode;
-	Cargo* tempVIPCargo;
+	Cargo* tempVIPCargo;*/
 	//move waiting normal cargo to delivered
-	while (!normalCargos.isEmpty())
+	//while (!normalCargos.isEmpty())
+	//{
+	//	Cargo* tempnormalCargo = normalCargos.getEntry(1);
+	//	Cargo* tempo = tempnormalCargo;
+	//	deliveredCargos.enqueue(tempo);
+	//	normalCargos.remove(1);
+	//}
+	////move waiting special cargo to delivered
+	//while (!specialCargos.isEmpty())
+	//{
+	//	specialCargos.dequeue(tempspecialNode);
+	//	tempSpecialCargo = tempspecialNode->getData();
+	//	deliveredCargos.enqueue(tempSpecialCargo);
+	//}
+	////move waiting vip cargo to delivered
+	//while (!vipCargos.isEmpty())
+	//{
+	//	vipCargos.dequeue(tempVIPNode);
+	//	tempVIPCargo = tempVIPNode->getData();
+	//	deliveredCargos.enqueue(tempVIPCargo);
+	//}
+	//================Phase2===============//
+	Node<Cargo>* tempNode;
+	Cargo* tempCargo;
+	PriorityQ<Cargo> tempPri;
+	while (!InExecution.isEmpty())
 	{
-		Cargo* tempnormalCargo = normalCargos.getEntry(1);
-		Cargo* tempo = tempnormalCargo;
-		deliveredCargos.enqueue(tempo);
-		normalCargos.remove(1);
+		InExecution.peek(tempNode);
+		tempCargo = tempNode->getData();
+		if (tempNode->getPriority() == day)
+		{
+			InExecution.dequeue(tempNode);
+			moveTruck(tempCargo);
+			int ED = tempNode->getPriority() - tempCargo->GetReadyDay() - tempCargo->getWaitingDays();
+			tempCargo->setED(ED);
+			tempCargo->setDD(tempNode->getPriority());
+			tempPri.enqueue(tempCargo, ED);
+		}
+		else
+			break;
 	}
-	//move waiting special cargo to delivered
-	while (!specialCargos.isEmpty())
+	while (!tempPri.isEmpty())
 	{
-		specialCargos.dequeue(tempspecialNode);
-		tempSpecialCargo = tempspecialNode->getData();
-		deliveredCargos.enqueue(tempSpecialCargo);
+		tempPri.dequeue(tempNode);
+		tempCargo = tempNode->getData();
+		deliveredCargos.enqueue(tempCargo);
 	}
-	//move waiting vip cargo to delivered
-	while (!vipCargos.isEmpty())
-	{
-		vipCargos.dequeue(tempVIPNode);
-		tempVIPCargo = tempVIPNode->getData();
-		deliveredCargos.enqueue(tempVIPCargo);
-	}
+	
 }
 
 void Company::moveTruck(Cargo* cargo)
@@ -1041,4 +1097,33 @@ void Company::checkInMaintenance()
 				AvailableTrucks[j].enqueue(tempTruck, -tempTruck->getSpeed());
 		}
 	}
+}
+
+int Company::getAvgUtilization()
+{
+	int tDC = (StatisticsArr[0] + StatisticsArr[1] + StatisticsArr[2]);
+	int tc = 0;
+	int N = 0;
+	int tAT = numberOfActive;
+	int Tsim = day*24 +hour;
+	Node<Truck>* temptruck;
+	for (int i = 0; i < StatisticsArr[3]; i++)
+	{
+		AvailableTrucks[0].dequeue(temptruck);
+		tc += temptruck->getData()->getTruckCapacity();
+		N += temptruck->getData()->getJourneyCount();
+	}
+	for (int i = 0; i < StatisticsArr[4]; i++)
+	{
+		AvailableTrucks[1].dequeue(temptruck);
+		tc += temptruck->getData()->getTruckCapacity();
+		N += temptruck->getData()->getJourneyCount();
+	}
+	for (int i = 0; i < StatisticsArr[5]; i++)
+	{
+		AvailableTrucks[2].dequeue(temptruck);
+		tc += temptruck->getData()->getTruckCapacity();
+		N += temptruck->getData()->getJourneyCount();
+	}
+	return tDC / (tc * N) * (tAT / Tsim);
 }

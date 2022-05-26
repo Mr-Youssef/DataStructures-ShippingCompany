@@ -899,8 +899,29 @@ void Company::moveToAvailableTrucks()
 				{
 					if (i >= 3)
 						tempTruck->resetInMaintenance();
-						AvailableTrucks[i].enqueue(tempTruck, tempTruck->getSpeed());
+						AvailableTrucks[i].enqueue(tempTruck, -tempTruck->getSpeed());
 						TrucksInCheckUp[i].dequeue(tempNode);
+				}
+				else break;
+			}
+		}
+		else
+		{
+			while (!AvailableTrucks[i].isEmpty())
+			{
+				tempNode = NULL;
+				AvailableTrucks[i].peek(tempNode);
+				if (tempNode)
+				{
+					tempTruck = tempNode->getData();
+				}
+				else break;
+				if (tempNode && tempTruck->moveToAvailable(hour))
+				{
+					if (i >= 3)
+						tempTruck->resetInMaintenance();
+					AvailableTrucks[i - 3].enqueue(tempTruck, -tempTruck->getSpeed());
+					AvailableTrucks[i].dequeue(tempNode);
 				}
 				else break;
 			}

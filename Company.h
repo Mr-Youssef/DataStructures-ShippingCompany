@@ -63,7 +63,7 @@ private:
 public:
 	Company();
 	/*Function that sets the available trucks according to the input file from the UI*/
-	void setAvailableTrucks(int, int, int, int*, int*, int*, int, int, int, int, int, int, int);
+	void setAvailableTrucks(int, int, int, int, int, int, int, int, int, int, int, int, int);
 
 	/*Loads the file to get input, and check is simulation is possible*/ 
 	bool Load();		

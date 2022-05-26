@@ -1,0 +1,10 @@
+CDTIDPTWTTID
+
+Cargos: 6 [N: 1, S: 3, V: 2]
+
+Cargo Avg Wait = 0.000000
+Auto-promoted Cargos: 0.000000%
+Trucks: 8 [N: 3, S: 3, V: 2]
+
+Avg Active Time = 0.000000%
+Avg Utilization= 0

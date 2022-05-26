@@ -13,10 +13,12 @@
 #include "Company.h"
 
 using namespace std;
+class Company;
 
 class UI
 {
 private:
+	Company* pCompany;
 	int noOfNormalTrucks;			// number of normal trucks
 	int noOfSpecialTrucks;			// number of special trucks
 	int noOfVIPTrucks;		    	// number of vip trucks
@@ -40,6 +42,7 @@ private:
 	void Fill_Trucks(ifstream& fin, PriorityQ<Truck>& normalTruck, PriorityQ<Truck>& specialTruck, PriorityQ<Truck>& vipTruck);				// Takes empty list of trucks from Company
 
 public:
+	UI(Company* ptr);
 	bool Read_File(Queue<Event>& EventList, PriorityQ<Truck>& NormalTruck, PriorityQ<Truck>& SpecialTruck, PriorityQ<Truck>& VIPTruck, int& NoOFcargos, int& NoofCancelled);	// reads input from file, and calls Fill_Events and Fill_Trucks
 
 	int getNoOfNormalTrucks() const;

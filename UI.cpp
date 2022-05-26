@@ -1,5 +1,9 @@
 #include "UI.h"
 
+UI::UI(Company* ptr)
+{
+	pCompany=ptr;
+}
 void UI::Error()
 {
 	cout << "Error due to improper input" << endl;
@@ -76,6 +80,7 @@ bool UI::Read_File(Queue<Event>& EventList, PriorityQ<Truck>& NormalTruck, Prior
 	}
 
 	Fill_Trucks(fin, NormalTruck, SpecialTruck, VIPTruck); // fills the rover lists
+	
 
 	fin >> AutoP;
 	fin >> MaxW;
@@ -161,9 +166,10 @@ void UI::Fill_Trucks(ifstream& fin, PriorityQ<Truck>& normalTruck, PriorityQ<Tru
 	fin >> speedNormalTrucks >> speedSpecialTrucks >> speedVIPTrucks;
 	fin >> capacityNormal >> capacitySpecial >> capacityVIP;
 	fin >> noOfJForCheckup >> normalChkupDuration >> specialChkupDuration >> vipChkupDuration;
+
 	for (int i = 0; i < noOfNormalTrucks; i++)
 	{
-		truck = new Truck('N', speedNormalTrucks, capacityNormal, noOfJForCheckup, normalChkupDuration);									// creates the truck
+		truck = new Truck('N', speedNormalTrucks, capacityNormal, noOfJForCheckup, normalChkupDuration); // creates the truck
 		normalTruck.enqueue(truck, ((Truck*)truck)->getSpeed());	// places it in the list, sorted
 																							// descendingly according to speed
 	}
@@ -179,6 +185,7 @@ void UI::Fill_Trucks(ifstream& fin, PriorityQ<Truck>& normalTruck, PriorityQ<Tru
 		vipTruck.enqueue(truck, ((Truck*)truck)->getSpeed()); // places it in the list, sorted
 																		// descendingly according to speed
 	}
+	pCompany->setAvailableTrucks(noOfNormalTrucks, noOfSpecialTrucks, noOfVIPTrucks, speedNormalTrucks, speedSpecialTrucks, speedVIPTrucks, capacityNormal, capacitySpecial, capacityVIP, noOfJForCheckup, normalChkupDuration, specialChkupDuration, vipChkupDuration);
 }
 
 int UI::getMode()
@@ -212,7 +219,7 @@ void UI::SaveFile(string line1, string line2, string line3, string line4, string
 	}
 
 	ofstream saved_file;
-	saved_file.open("saved_file.txt", ios::out | ios::trunc);
+	saved_file.open("Output.txt", ios::out | ios::trunc);
 	saved_file << line1 << endl << line2 << endl << line3 << endl << line4 << endl << line5 << endl << line6 << endl << line7 << endl << line8 << endl;
 	saved_file.close();
 }

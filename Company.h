@@ -40,6 +40,7 @@ private:
 	PriorityQ<Cargo> movingCargos;
 	Queue<Cargo> deliveredCargos;
 	PriorityQ<Truck> AvailableTrucks[6];
+	PriorityQ<Cargo> InExecution;
 	Queue<Truck> VIPtrucks;
 	Queue<Truck> SpecialTrucks;
 	Queue<Truck> NormalTrucks;
@@ -51,7 +52,7 @@ private:
 	int noOfCargos;
 	int noOfCancelled;
 	int noOfEvents;
-	float numberOfActive;
+	float numberOfActive;  //numberofExecution
 	float numberOfWaiting;
 	int autoPromoted;
 	int day;
@@ -62,7 +63,7 @@ private:
 public:
 	Company();
 	/*Function that sets the available trucks according to the input file from the UI*/
-	void setAvailableTrucks(int, int, int, int, int, int, int, int, int, int, int, int, int);
+	void setAvailableTrucks(int, int, int, int*, int*, int*, int, int, int, int, int, int, int);
 
 	/*Loads the file to get input, and check is simulation is possible*/ 
 	bool Load();		
@@ -85,6 +86,10 @@ public:
 	void checkWaiting_VIP();
 	void checkWaiting_Special();
 	void checkWaiting_Normal();
+	void moveToMoving_NCargo();
+	void moveToMoving_SCargo();
+	void moveToMoving_VCargo();
+
 	/*A function that checks the cargos that have an assigned truck and move them to the loading cargos list*/
 	void moveToLoading();
 

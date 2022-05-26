@@ -8,7 +8,7 @@ private:
 	char truckType;
 	int truckCapacity;
 	int checkupDuration;
-	int checkupEnter;
+	int checkupEnter;         
 	int speed;
 	int deliveryInterval;
 	int assignedCargoCount;  //No. of cargos assigned in the truck and still are being delivered 

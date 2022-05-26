@@ -20,7 +20,7 @@ Company::Company()
 
 
 //==============For Bonus 3 ArrOfSpeed will be parameters instead of NS, SS, VS=============//
-void Company::setAvailableTrucks(int N, int S, int V, int NS, int SS, int VS, int NTC, int STC, int VTC, int J, int CN, int CS, int CV)
+void Company::setAvailableTrucks(int N, int S, int V, int *NS, int *SS, int *VS, int NTC, int STC, int VTC, int J, int CN, int CS, int CV)
 {
 	/*Saving the number of each truck for each type*/
 	StatisticsArr[3] = N;
@@ -32,26 +32,26 @@ void Company::setAvailableTrucks(int N, int S, int V, int NS, int SS, int VS, in
 	for (int i = 0; i < N; i++)
 	{
 
-		Truck* normal = new Truck('N', NS, NTC, J, CN);
+		Truck* normal = new Truck('N', NS[i], NTC, J, CN);
 		normal->setTruckID(id);
 		id++;
-		AvailableTrucks[0].enqueue(normal, NS);
+		AvailableTrucks[0].enqueue(normal, NS[i]);
 	}
 
 	for (int i = 0; i < S; i++)
 	{
-		Truck* special = new Truck('S', SS, STC, J, CS);
+		Truck* special = new Truck('S', SS[i], STC, J, CS);
 		special->setTruckID(id);
 		id++;
-		AvailableTrucks[1].enqueue(special, SS);
+		AvailableTrucks[1].enqueue(special, SS[i]);
 	}
 
 	for (int i = 0; i < V; i++)
 	{
-		Truck* vip = new Truck('V', VS, VTC, J, CV);
+		Truck* vip = new Truck('V', VS[i], VTC, J, CV);
 		vip->setTruckID(id);
 		id++;
-		AvailableTrucks[0].enqueue(vip, VS);
+		AvailableTrucks[0].enqueue(vip, VS[i]);
 	}
 }
 
@@ -719,6 +719,93 @@ void Company::checkWaiting_Normal()
 	}
 }
 
+void Company::moveToMoving_NCargo()
+{
+	Node<Cargo>* tempNode = NULL;
+	Cargo* tempCargo;
+	int CDT;
+	while (!normalCargos.isEmpty())
+	{
+		tempCargo = normalCargos.getEntry(1);
+		bool check = normalCargos.remove(1);
+		if (check)
+		{
+			tempCargo = tempNode->getData();
+			if (tempCargo->GetTruck())
+			{
+				//add the move time, t2eban hour dlw2ty hya el move time
+				CDT = hour + (tempCargo->GetDeliveryDistance()/tempCargo->GetTruck()->getSpeed()) + tempCargo->GetloadTime();
+				numberOfActive += CDT;
+				numberOfWaiting += tempCargo->getWaitingDays();
+				InExecution.enqueue(tempCargo, CDT);
+				normalCargos.getEntry(1);
+				normalCargos.remove(1);
+			}
+			else
+			{
+				normalCargos.InsertEnd(tempCargo);
+				break;
+			}
+
+		}
+		else
+		{
+			normalCargos.getEntry(1);
+			normalCargos.remove(1);
+		}
+	}
+}
+void Company::moveToMoving_SCargo()
+{
+	Node<Cargo>* tempNode;
+	Cargo* tempCargo;
+	int CDT;
+	Queue<Cargo> tempQ;
+	while (!specialCargos.isEmpty())
+	{
+		specialCargos.peek(tempNode);
+		tempCargo = tempNode->getData();
+		if (tempCargo->GetTruck())
+		{
+			CDT = hour + (tempCargo->GetDeliveryDistance() / tempCargo->GetTruck()->getSpeed()) + tempCargo->GetloadTime();
+			numberOfActive += CDT;
+			numberOfWaiting += tempCargo->getWaitingDays();
+			InExecution.enqueue(tempCargo, CDT);
+			specialCargos.dequeue(tempNode);
+		}
+		else
+		{
+			break;
+		}
+
+	}
+}
+void Company::moveToMoving_VCargo()
+{
+	Node<Cargo>* tempNode;
+	Cargo* tempCargo;
+	int CDT;
+	PriorityQ<Cargo> tempPriQ;
+	while (!vipCargos.isEmpty())
+	{
+		vipCargos.peek(tempNode);
+		tempCargo = tempNode->getData();
+		if (tempCargo->GetTruck())
+		{
+			CDT = hour + (tempCargo->GetDeliveryDistance() / tempCargo->GetTruck()->getSpeed()) + tempCargo->GetloadTime();
+			numberOfActive += CDT;
+			numberOfWaiting += tempCargo->getWaitingDays();
+			InExecution.enqueue(tempCargo, CDT);
+			vipCargos.dequeue(tempNode);
+		}
+		else
+		{
+			break;
+		}
+
+	}
+}
+
 void Company::moveToLoading()
 {
 	/////////////////
@@ -728,9 +815,9 @@ void Company::moveToLoading()
 
 void Company::moveToMoving()
 {
-	/////////////////
-	//   PHASE 2   //
-	/////////////////
+	moveToMoving_VCargo();
+	moveToMoving_SCargo();
+	moveToMoving_NCargo();
 }
 
 void Company::moveToDelivered()
@@ -850,9 +937,60 @@ float Company::getAutoPromotedPercent()
 
 void Company::autoPromote()
 {
-	/////////////////
-	//   PHASE 2   //
-	/////////////////
+	Node<Cargo>* tempNode;
+	Cargo* tempCargo;
+	int WD = -1;
+	Queue<int> tempQ;
+	normalCargos.getEntry(1);
+	
+		//bool check = Mountainous.search(tempNode, *(key->getData()));
+		//while (true)
+		//{
+		//	/*If the mission was found, search the hashtable for the mission with the key returned from Peek function*/
+		//	while (!check)
+		//	{ /*If mission with the key returned from peek does not exist in the hashtable, remove it from the queue, and peek again to check for missions after it*/
+		//		tempNode = NULL;
+		//		MountainousSort.dequeue(key);
+		//		check = MountainousSort.peek(key);
+		//		if (check)
+		//			check = Mountainous.search(tempNode, *(key->getData()));
+		//		else
+		//			break;
+		//	}
+		//	/*If the mission exists in the hashtable, get its waiting day(s) value on this current day*/
+		//	if (tempNode)
+		//	{
+		//		tempMission = tempNode->getData();
+		//		WD = tempMission->getWaitingDay();
+		//	}
+		//	else
+		//		break;
+		//	/*Checking if the waiting days value on the current day equals the value of the autopromotion duration*/
+		//	if (WD == AutoPro)
+		//	{
+		//		/*If the condition is met, remove the function from the  queue and hashtable, and add them to the emergency waiting missions priqueue, resetting their mission type to "E"(Emergency) from "M"(Mountainious)*/
+		//		Mountainous.remove(tempNode, *(key->getData()));
+		//		int priority = (tempMission->getTargetLocation() * tempMission->getMissionDuration() * tempMission->getSignificance()) / (tempMission->getTargetLocation() + tempMission->getMissionDuration() + tempMission->getSignificance());//priority (Key) equation of the priqueue
+		//		tempMission->setMissionType('E');
+		//		Emergency.enqueue(tempMission, -priority);
+		//		/*Incrementing the number of both emergency missions and autopromoted missions and decrementing the number of mountainious missions*/
+		//		StatsArr[6]++;
+		//		StatsArr[3]++;
+		//		StatsArr[5]--;
+		//		check = MountainousSort.peek(key);
+		//		/*If no more missions are found, exit the function*/
+		//		tempNode = NULL;
+		//		if (check)
+		//			check = Mountainous.search(tempNode, *(key->getData()));
+		//		else
+		//			break;
+
+		//	}
+		//	else
+		//		break;
+
+		//}
+	
 }
 
 void Company::checkInMaintenance()
